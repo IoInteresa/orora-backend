@@ -19,7 +19,6 @@ export enum HttpStatus {
   INTERNAL_SERVER_ERROR = 500,
   BAD_GATEWAY = 502,
   SERVICE_UNAVAILABLE = 503,
-  NETWORK_AUTHENTICATION_REQUIRED = 511,
 }
 
 export enum ResponseText {
@@ -40,4 +39,6 @@ export enum ResponseText {
   UNABLE_TO_GENERATE_TOKEN = 'Unable to generate token jwt',
   INVALID_LOGIN_CREDENTIALS = 'Invalid login credentials',
   UNABLE_TO_LOGOUT = 'Unable to logout',
+  UNAUTHORIZED = 'Unauthorized',
+  TOKEN_EXPIRED = 'Token expired or is invalid',
 }
