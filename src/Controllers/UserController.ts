@@ -62,7 +62,7 @@ class UserController implements IUserController {
             }
 
             const { user, accessToken } = await this.userService.verify(req.body);
-            res.json({ status: HttpStatus.OK, data: { user, accessToken } });
+            res.json({ status: HttpStatus.OK, data: { ...user, accessToken } });
         } catch (error) {
             next(error);
         }
@@ -76,7 +76,7 @@ class UserController implements IUserController {
             }
 
             const { user, accessToken } = await this.userService.login(req.body);
-            res.json({ status: HttpStatus.OK, data: { user, accessToken } });
+            res.json({ status: HttpStatus.OK, data: { ...user, accessToken } });
         } catch (error) {
             next(error);
         }
