@@ -6,6 +6,7 @@
         "start": "npm run build && node dist/src/index",
         "dev": "nodemon --exec ts-node src/index.ts",
         "build": "rimraf ./dist && npx tsc",
+        "pm2": "npm run build && pm2 start ecosystem.config.js --env production",
         "migrate": "npx knex migrate:latest",
         "lint": "eslint 'src/**/*.{js,ts,tsx}'",
         "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,json,css,scss,md}'",

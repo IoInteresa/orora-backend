@@ -7,6 +7,8 @@ import ThrowError from '../Responses/ThrowError';
 // Если убрать next, то express.js не распознает функцию как обработчик ошибок
 
 const ErrorMiddleware = (error: Error, req: Request, res: Response, _: NextFunction) => {
+    console.log(error);
+    
     if (error instanceof ThrowError) {
         return res.status(error.statusCode).json({ status: error.statusCode, data: error.data });
     }
