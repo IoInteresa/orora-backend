@@ -15,7 +15,7 @@ export class RegistrationDto {
     phonenumber?: string;
 
     @IsString()
-    @MinLength(6)
+    @Length(6, 20)
     password: string = '';
 }
 
@@ -54,6 +54,6 @@ export class LoginDto {
     @Length(8, 20)
     phonenumber?: string;
 
-    @MinLength(6)
+    @Length(6, 20)
     password: string = '';
 }
