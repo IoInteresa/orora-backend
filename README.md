@@ -1,3 +1,11 @@
 ```
-docker run --name orora -e POSTGRES_PASSWORD=password -e POSTGRES_DB=db -p 5434:5432 -d postgres
+npm install
+npm run migrate
+npm start
 ```
+Database: PostgreSql
+
+&nbsp;
+#### Don't forget to create and fill out the .env file.
+
+[Посмотреть документацию api](documentation.md)
