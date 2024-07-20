@@ -14,11 +14,11 @@
     "prettier"
   ],
   "parserOptions": {
-    "ecmaVersion": 2020,
+    "ecmaVersion": 2023,
     "sourceType": "module"
   },
   "rules": {
-    "prettier/prettier": "error",
+    "indent": "off",
     "import/order": [
       "error",
       {

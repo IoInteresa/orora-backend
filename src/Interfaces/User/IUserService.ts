@@ -3,8 +3,8 @@ import UserDTO from '../../Dto/UserDto';
 import { LoginData, RegistrationData, SendVerifyCodeData, VerifyData } from '../../Validators/Data';
 
 export default interface IUserService {
-  registration: (data: RegistrationData) => Promise<UserDTO>;
-  sendVerifyCode: (data: SendVerifyCodeData) => Promise<{ status: number }>;
-  verify: (data: VerifyData) => Promise<IUserServiceLoginResponse>;
-  login: (data: LoginData) => Promise<IUserServiceLoginResponse>;
+    registration: (data: RegistrationData) => Promise<UserDTO>;
+    sendVerifyCode: (data: SendVerifyCodeData) => Promise<{ status: number }>;
+    verify: (data: VerifyData) => Promise<IUserServiceLoginResponse>;
+    login: (data: LoginData) => Promise<IUserServiceLoginResponse>;
 }

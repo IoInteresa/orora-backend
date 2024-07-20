@@ -9,75 +9,78 @@ import { LoginDto, RegistrationDto, SendVerifyCodeDto, VerifyDto } from '../Vali
 import Validator from '../Validators/Validator';
 
 class UserController implements IUserController {
-  private readonly userService: IUserService;
-  private readonly validator: Validator;
+    private readonly userService: IUserService;
+    private readonly validator: Validator;
 
-  constructor(userService: IUserService) {
-    this.userService = userService;
-    this.validator = new Validator();
-  }
-
-  public registration = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const errors = await this.validator.validate<RegistrationData, RegistrationDto>(
-        req.body,
-        RegistrationDto,
-      );
-      if (errors) {
-        throw new ThrowError(HttpStatus.UNPROCESSABLE_ENTITY, ResponseText.INVALID_DATA);
-      }
-
-      const createdUser = await this.userService.registration(req.body);
-      res.status(HttpStatus.CREATED).json({ status: HttpStatus.CREATED, data: createdUser });
-    } catch (error) {
-      next(error);
+    constructor(userService: IUserService) {
+        this.userService = userService;
+        this.validator = new Validator();
     }
-  };
 
-  public sendVerifyCode = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const errors = await this.validator.validate<SendVerifyCodeData, SendVerifyCodeDto>(
-        req.body,
-        SendVerifyCodeDto,
-      );
-      if (errors) {
-        throw new ThrowError(HttpStatus.UNPROCESSABLE_ENTITY, ResponseText.INVALID_DATA);
-      }
+    public registration = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const errors = await this.validator.validate<RegistrationData, RegistrationDto>(
+                req.body,
+                RegistrationDto,
+            );
+            if (errors) {
+                throw new ThrowError(HttpStatus.UNPROCESSABLE_ENTITY, ResponseText.INVALID_DATA);
+            }
 
-      const response = await this.userService.sendVerifyCode(req.body);
-      res.json(response);
-    } catch (error) {
-      next(error);
-    }
-  };
+            const createdUser = await this.userService.registration(req.body);
+            res.status(HttpStatus.CREATED).json({ status: HttpStatus.CREATED, data: createdUser });
+        } catch (error) {
+            next(error);
+        }
+    };
 
-  public verify = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const errors = await this.validator.validate<VerifyData, VerifyDto>(req.body, VerifyDto);
-      if (errors) {
-        throw new ThrowError(HttpStatus.UNPROCESSABLE_ENTITY, ResponseText.INVALID_DATA);
-      }
+    public sendVerifyCode = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const errors = await this.validator.validate<SendVerifyCodeData, SendVerifyCodeDto>(
+                req.body,
+                SendVerifyCodeDto,
+            );
+            if (errors) {
+                throw new ThrowError(HttpStatus.UNPROCESSABLE_ENTITY, ResponseText.INVALID_DATA);
+            }
 
-      const { user, accessToken } = await this.userService.verify(req.body);
-      res.json({ status: HttpStatus.OK, data: { user, accessToken } });
-    } catch (error) {
-      next(error);
-    }
-  };
+            const response = await this.userService.sendVerifyCode(req.body);
+            res.json(response);
+        } catch (error) {
+            next(error);
+        }
+    };
 
-  public login = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const errors = await this.validator.validate<LoginData, LoginDto>(req.body, LoginDto);
-      if (errors) {
-        throw new ThrowError(HttpStatus.UNPROCESSABLE_ENTITY, ResponseText.INVALID_DATA);
-      }
+    public verify = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const errors = await this.validator.validate<VerifyData, VerifyDto>(
+                req.body,
+                VerifyDto,
+            );
+            if (errors) {
+                throw new ThrowError(HttpStatus.UNPROCESSABLE_ENTITY, ResponseText.INVALID_DATA);
+            }
 
-      const { user, accessToken } = await this.userService.login(req.body);
-      res.json({ status: HttpStatus.OK, data: { user, accessToken } });
-    } catch (error) {
-      next(error);
-    }
-  };
+            const { user, accessToken } = await this.userService.verify(req.body);
+            res.json({ status: HttpStatus.OK, data: { user, accessToken } });
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    public login = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const errors = await this.validator.validate<LoginData, LoginDto>(req.body, LoginDto);
+            if (errors) {
+                throw new ThrowError(HttpStatus.UNPROCESSABLE_ENTITY, ResponseText.INVALID_DATA);
+            }
+
+            const { user, accessToken } = await this.userService.login(req.body);
+            res.json({ status: HttpStatus.OK, data: { user, accessToken } });
+        } catch (error) {
+            next(error);
+        }
+    };
 }
 
 export default UserController;

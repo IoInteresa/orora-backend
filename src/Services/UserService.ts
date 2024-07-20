@@ -13,176 +13,188 @@ import SmsManager from '../Utilities/SmsManager';
 import { LoginData, RegistrationData, SendVerifyCodeData, VerifyData } from '../Validators/Data';
 
 class UserService implements IUserService {
-  private readonly userModel: IUserModel;
-  private readonly verificationCodeModel: IVerificationCodeModal;
-  private readonly mailManager: MailManager;
-  private readonly smsManager: SmsManager;
-  private readonly jwtManager: JwtManager;
+    private readonly userModel: IUserModel;
+    private readonly verificationCodeModel: IVerificationCodeModal;
+    private readonly mailManager: MailManager;
+    private readonly smsManager: SmsManager;
+    private readonly jwtManager: JwtManager;
 
-  constructor(userModel: IUserModel, verificationCodeModel: IVerificationCodeModal) {
-    this.userModel = userModel;
-    this.verificationCodeModel = verificationCodeModel;
-    this.mailManager = new MailManager();
-    this.smsManager = new SmsManager();
-    this.jwtManager = new JwtManager();
-  }
-
-  public registration = async (userData: RegistrationData) => {
-    const { username, email, password, phonenumber } = userData;
-
-    const candidate = await this.userModel.findOne({
-      email,
-      phonenumber,
-      username,
-    });
-    if (candidate) {
-      throw new ThrowError(HttpStatus.CONFLICT, ResponseText.USER_ALREADY_EXISTS);
+    constructor(userModel: IUserModel, verificationCodeModel: IVerificationCodeModal) {
+        this.userModel = userModel;
+        this.verificationCodeModel = verificationCodeModel;
+        this.mailManager = new MailManager();
+        this.smsManager = new SmsManager();
+        this.jwtManager = new JwtManager();
     }
 
-    const hashPassword = await bcrypt.hash(password, 5);
-    if (!hashPassword) {
-      throw new ThrowError(HttpStatus.INTERNAL_SERVER_ERROR, ResponseText.UNABLE_USER_CREATE);
-    }
+    public registration = async (userData: RegistrationData) => {
+        const { username, email, password, phonenumber } = userData;
 
-    const user = await this.userModel.create({
-      username,
-      email: email ?? '',
-      password: hashPassword,
-      phonenumber: phonenumber ?? '',
-      verified: false,
-      active: true,
-    });
-    if (!user) {
-      throw new ThrowError(HttpStatus.INTERNAL_SERVER_ERROR, ResponseText.UNABLE_USER_CREATE);
-    }
+        const candidate = await this.userModel.findOne({
+            email,
+            phonenumber,
+            username,
+        });
+        if (candidate) {
+            throw new ThrowError(HttpStatus.CONFLICT, ResponseText.USER_ALREADY_EXISTS);
+        }
 
-    return new UserDTO(user);
-  };
+        const hashPassword = await bcrypt.hash(password, 5);
+        if (!hashPassword) {
+            throw new ThrowError(HttpStatus.INTERNAL_SERVER_ERROR, ResponseText.UNABLE_USER_CREATE);
+        }
 
-  public sendVerifyCode = async (sendVerifyCodeData: SendVerifyCodeData) => {
-    const { email, phonenumber } = sendVerifyCodeData;
+        const user = await this.userModel.create({
+            username,
+            email: email ?? '',
+            password: hashPassword,
+            phonenumber: phonenumber ?? '',
+            verified: false,
+            active: true,
+        });
+        if (!user) {
+            throw new ThrowError(HttpStatus.INTERNAL_SERVER_ERROR, ResponseText.UNABLE_USER_CREATE);
+        }
 
-    const user = await this.userModel.findOne({ email, phonenumber });
-    if (!user) {
-      throw new ThrowError(HttpStatus.NOT_FOUND, ResponseText.USER_NOT_FOUND);
-    }
+        return new UserDTO(user);
+    };
 
-    if (user.verified) {
-      throw new ThrowError(HttpStatus.CONFLICT, ResponseText.USER_ALREADY_VERIFIED);
-    }
+    public sendVerifyCode = async (sendVerifyCodeData: SendVerifyCodeData) => {
+        const { email, phonenumber } = sendVerifyCodeData;
 
-    const verifyCode = generateVerifyCode();
+        const user = await this.userModel.findOne({ email, phonenumber });
+        if (!user) {
+            throw new ThrowError(HttpStatus.NOT_FOUND, ResponseText.USER_NOT_FOUND);
+        }
 
-    if (email) {
-      const successfully = await this.mailManager.send(email, verifyCode);
-      if (!successfully) {
-        throw new ThrowError(HttpStatus.INTERNAL_SERVER_ERROR, ResponseText.UNABLE_TO_SEND_EMAIL);
-      }
-    }
+        if (user.verified) {
+            throw new ThrowError(HttpStatus.CONFLICT, ResponseText.USER_ALREADY_VERIFIED);
+        }
 
-    if (phonenumber) {
-      const text = `Your verification code is: ${verifyCode}`;
-      const successfully = await this.smsManager.send(phonenumber, text);
+        const verifyCode = generateVerifyCode();
 
-      if (!successfully) {
-        throw new ThrowError(HttpStatus.INTERNAL_SERVER_ERROR, ResponseText.UNABLE_TO_SEND_SMS);
-      }
-    }
+        if (email) {
+            const successfully = await this.mailManager.send(email, verifyCode);
+            if (!successfully) {
+                throw new ThrowError(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    ResponseText.UNABLE_TO_SEND_EMAIL,
+                );
+            }
+        }
 
-    const verificationData = await this.verificationCodeModel.findOne({
-      user_id: user.id,
-    });
-    if (verificationData) {
-      const response = await this.verificationCodeModel.update({
-        user_id: user.id,
-        code: verifyCode,
-      });
-      if (!response) {
-        throw new ThrowError(
-          HttpStatus.INTERNAL_SERVER_ERROR,
-          ResponseText.UNABLE_TO_SAVE_VERIFICATION_CODE,
-        );
-      }
-    } else {
-      const response = await this.verificationCodeModel.create({
-        user_id: user.id,
-        code: verifyCode,
-      });
-      if (!response) {
-        throw new ThrowError(
-          HttpStatus.INTERNAL_SERVER_ERROR,
-          ResponseText.UNABLE_TO_SAVE_VERIFICATION_CODE,
-        );
-      }
-    }
+        if (phonenumber) {
+            const text = `Your verification code is: ${verifyCode}`;
+            const successfully = await this.smsManager.send(phonenumber, text);
 
-    return { status: HttpStatus.OK };
-  };
+            if (!successfully) {
+                throw new ThrowError(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    ResponseText.UNABLE_TO_SEND_SMS,
+                );
+            }
+        }
 
-  public verify = async (verifyData: VerifyData) => {
-    const { email, phonenumber, code } = verifyData;
+        const verificationData = await this.verificationCodeModel.findOne({
+            user_id: user.id,
+        });
+        if (verificationData) {
+            const response = await this.verificationCodeModel.update({
+                user_id: user.id,
+                code: verifyCode,
+            });
+            if (!response) {
+                throw new ThrowError(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    ResponseText.UNABLE_TO_SAVE_VERIFICATION_CODE,
+                );
+            }
+        } else {
+            const response = await this.verificationCodeModel.create({
+                user_id: user.id,
+                code: verifyCode,
+            });
+            if (!response) {
+                throw new ThrowError(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    ResponseText.UNABLE_TO_SAVE_VERIFICATION_CODE,
+                );
+            }
+        }
 
-    const user = await this.userModel.findOne({ email, phonenumber });
-    if (!user) {
-      throw new ThrowError(HttpStatus.NOT_FOUND, ResponseText.USER_NOT_FOUND);
-    }
+        return { status: HttpStatus.OK };
+    };
 
-    if (user.verified) {
-      throw new ThrowError(HttpStatus.CONFLICT, ResponseText.USER_ALREADY_VERIFIED);
-    }
+    public verify = async (verifyData: VerifyData) => {
+        const { email, phonenumber, code } = verifyData;
 
-    const verificationData = await this.verificationCodeModel.findOne({
-      user_id: user.id,
-    });
-    if (!verificationData) {
-      throw new ThrowError(HttpStatus.NOT_FOUND, ResponseText.VERIFICATION_CODE_NOT_FOUND);
-    }
+        const user = await this.userModel.findOne({ email, phonenumber });
+        if (!user) {
+            throw new ThrowError(HttpStatus.NOT_FOUND, ResponseText.USER_NOT_FOUND);
+        }
 
-    if (verificationData.code !== code) {
-      throw new ThrowError(HttpStatus.BAD_REQUEST, ResponseText.INVALID_VERIFICATION_CODE);
-    }
+        if (user.verified) {
+            throw new ThrowError(HttpStatus.CONFLICT, ResponseText.USER_ALREADY_VERIFIED);
+        }
 
-    const updatedUser = await this.userModel.updateVerified({
-      ...user,
-      verified: true,
-    });
-    if (!updatedUser) {
-      throw new ThrowError(
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        ResponseText.UNABLE_TO_UPDATE_USER_VERIFICATION,
-      );
-    }
+        const verificationData = await this.verificationCodeModel.findOne({
+            user_id: user.id,
+        });
+        if (!verificationData) {
+            throw new ThrowError(HttpStatus.NOT_FOUND, ResponseText.VERIFICATION_CODE_NOT_FOUND);
+        }
 
-    const accessToken = this.jwtManager.generateToken(user.id);
-    if (!accessToken) {
-      throw new ThrowError(HttpStatus.INTERNAL_SERVER_ERROR, ResponseText.UNABLE_TO_GENERATE_TOKEN);
-    }
+        if (verificationData.code !== code) {
+            throw new ThrowError(HttpStatus.BAD_REQUEST, ResponseText.INVALID_VERIFICATION_CODE);
+        }
 
-    const userDto = new UserDTO(user);
-    return { user: userDto, accessToken };
-  };
+        const updatedUser = await this.userModel.updateVerified({
+            ...user,
+            verified: true,
+        });
+        if (!updatedUser) {
+            throw new ThrowError(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                ResponseText.UNABLE_TO_UPDATE_USER_VERIFICATION,
+            );
+        }
 
-  public login = async (loginData: LoginData) => {
-    const { email, phonenumber, password } = loginData;
+        const accessToken = this.jwtManager.generateToken(user.id);
+        if (!accessToken) {
+            throw new ThrowError(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                ResponseText.UNABLE_TO_GENERATE_TOKEN,
+            );
+        }
 
-    const user = await this.userModel.findOne({ email, phonenumber });
-    if (!user) {
-      throw new ThrowError(HttpStatus.NOT_FOUND, ResponseText.USER_NOT_FOUND);
-    }
+        const userDto = new UserDTO(user);
+        return { user: userDto, accessToken };
+    };
 
-    const isPassEqual = await bcrypt.compare(password, user.password);
-    if (!isPassEqual) {
-      throw new ThrowError(HttpStatus.BAD_REQUEST, ResponseText.INVALID_LOGIN_CREDENTIALS);
-    }
+    public login = async (loginData: LoginData) => {
+        const { email, phonenumber, password } = loginData;
 
-    const accessToken = this.jwtManager.generateToken(user.id);
-    if (!accessToken) {
-      throw new ThrowError(HttpStatus.INTERNAL_SERVER_ERROR, ResponseText.UNABLE_TO_GENERATE_TOKEN);
-    }
+        const user = await this.userModel.findOne({ email, phonenumber });
+        if (!user) {
+            throw new ThrowError(HttpStatus.NOT_FOUND, ResponseText.USER_NOT_FOUND);
+        }
 
-    const userDto = new UserDTO(user);
-    return { user: userDto, accessToken };
-  };
+        const isPassEqual = await bcrypt.compare(password, user.password);
+        if (!isPassEqual) {
+            throw new ThrowError(HttpStatus.BAD_REQUEST, ResponseText.INVALID_LOGIN_CREDENTIALS);
+        }
+
+        const accessToken = this.jwtManager.generateToken(user.id);
+        if (!accessToken) {
+            throw new ThrowError(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                ResponseText.UNABLE_TO_GENERATE_TOKEN,
+            );
+        }
+
+        const userDto = new UserDTO(user);
+        return { user: userDto, accessToken };
+    };
 }
 
 export default UserService;
