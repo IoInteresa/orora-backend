@@ -10,7 +10,7 @@ import { generateVerifyCode } from '../Utilities';
 import JwtManager from '../Utilities/JwtManager';
 import MailManager from '../Utilities/MailManager';
 import SmsManager from '../Utilities/SmsManager';
-import { RegistrationData, SendVerifyCodeData, VerifyData } from '../Validators/Data';
+import { LoginData, RegistrationData, SendVerifyCodeData, VerifyData } from '../Validators/Data';
 
 class UserService implements IUserService {
   private readonly userModel: IUserModel;
@@ -59,8 +59,8 @@ class UserService implements IUserService {
     return new UserDTO(user);
   };
 
-  public sendVerifyCode = async (verifyData: SendVerifyCodeData) => {
-    const { email, phonenumber } = verifyData;
+  public sendVerifyCode = async (sendVerifyCodeData: SendVerifyCodeData) => {
+    const { email, phonenumber } = sendVerifyCodeData;
 
     const user = await this.userModel.findOne({ email, phonenumber });
     if (!user) {
@@ -151,6 +151,28 @@ class UserService implements IUserService {
         HttpStatus.INTERNAL_SERVER_ERROR,
         ResponseText.UNABLE_TO_UPDATE_USER_VERIFICATION,
       );
+    }
+
+    const accessToken = this.jwtManager.generateToken(user.id);
+    if (!accessToken) {
+      throw new ThrowError(HttpStatus.INTERNAL_SERVER_ERROR, ResponseText.UNABLE_TO_GENERATE_TOKEN);
+    }
+
+    const userDto = new UserDTO(user);
+    return { user: userDto, accessToken };
+  };
+
+  public login = async (loginData: LoginData) => {
+    const { email, phonenumber, password } = loginData;
+
+    const user = await this.userModel.findOne({ email, phonenumber });
+    if (!user) {
+      throw new ThrowError(HttpStatus.NOT_FOUND, ResponseText.USER_NOT_FOUND);
+    }
+
+    const isPassEqual = await bcrypt.compare(password, user.password);
+    if (!isPassEqual) {
+      throw new ThrowError(HttpStatus.BAD_REQUEST, ResponseText.INVALID_LOGIN_CREDENTIALS);
     }
 
     const accessToken = this.jwtManager.generateToken(user.id);

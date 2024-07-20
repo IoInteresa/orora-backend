@@ -8,6 +8,7 @@ export default (userController: IUserController) => {
   router.post('/registration', userController.registration);
   router.post('/send-verify-code', userController.sendVerifyCode);
   router.post('/verify', userController.verify);
+  router.post('/login', userController.login);
 
   return router;
 };

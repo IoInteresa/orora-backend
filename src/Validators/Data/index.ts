@@ -15,3 +15,9 @@ export interface VerifyData {
   phonenumber?: string;
   code: number;
 }
+
+export interface LoginData {
+  email?: string;
+  phonenumber?: string;
+  password: string;
+}

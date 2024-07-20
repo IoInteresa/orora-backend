@@ -38,4 +38,6 @@ export enum ResponseText {
   USER_NOT_VERIFIED_YET = 'User is not verified yet',
   UNABLE_TO_UPDATE_USER_VERIFICATION = 'Unable to update user verification',
   UNABLE_TO_GENERATE_TOKEN = 'Unable to generate token jwt',
+  INVALID_LOGIN_CREDENTIALS = 'Invalid login credentials',
+  UNABLE_TO_LOGOUT = 'Unable to logout',
 }

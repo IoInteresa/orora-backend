@@ -43,3 +43,17 @@ export class VerifyDto {
   @IsNumber()
   code: number = 0;
 }
+
+export class LoginDto {
+  @ValidateIf((o) => !o.phonenumber)
+  @IsEmail()
+  email?: string;
+
+  @ValidateIf((o) => !o.email)
+  @IsString()
+  @Length(8, 20)
+  phonenumber?: string;
+
+  @MinLength(6)
+  password: string = '';
+}

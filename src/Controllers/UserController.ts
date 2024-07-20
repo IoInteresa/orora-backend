@@ -4,8 +4,8 @@ import { HttpStatus, ResponseText } from '../Constants';
 import IUserController from '../Interfaces/User/IUserController';
 import IUserService from '../Interfaces/User/IUserService';
 import ThrowError from '../Responses/ThrowError';
-import { RegistrationData, SendVerifyCodeData, VerifyData } from '../Validators/Data';
-import { RegistrationDto, SendVerifyCodeDto, VerifyDto } from '../Validators/Dto';
+import { LoginData, RegistrationData, SendVerifyCodeData, VerifyData } from '../Validators/Data';
+import { LoginDto, RegistrationDto, SendVerifyCodeDto, VerifyDto } from '../Validators/Dto';
 import Validator from '../Validators/Validator';
 
 class UserController implements IUserController {
@@ -59,6 +59,20 @@ class UserController implements IUserController {
       }
 
       const { user, accessToken } = await this.userService.verify(req.body);
+      res.json({ status: HttpStatus.OK, data: { user, accessToken } });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public login = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const errors = await this.validator.validate<LoginData, LoginDto>(req.body, LoginDto);
+      if (errors) {
+        throw new ThrowError(HttpStatus.UNPROCESSABLE_ENTITY, ResponseText.INVALID_DATA);
+      }
+
+      const { user, accessToken } = await this.userService.login(req.body);
       res.json({ status: HttpStatus.OK, data: { user, accessToken } });
     } catch (error) {
       next(error);

@@ -1,9 +1,12 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 import { HttpStatus, ResponseText } from '../Constants';
 import ThrowError from '../Responses/ThrowError';
 
-const ErrorMiddleware = (error: Error, req: Request, res: Response) => {
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// Если убрать next, то express.js не распознает функцию как обработчик ошибок
+
+const ErrorMiddleware = (error: Error, req: Request, res: Response, _: NextFunction) => {
   if (error instanceof ThrowError) {
     return res.status(error.statusCode).json({ status: error.statusCode, data: error.data });
   }
