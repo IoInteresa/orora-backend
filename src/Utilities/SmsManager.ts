@@ -1,16 +1,10 @@
-import axios from "axios";
+import axios from 'axios';
 
-const { ALIGO_API_URL, ALIGO_API_KEY, ALIGO_USER_ID, ALIGO_SENDER_NUMBER } =
-  process.env;
+const { ALIGO_API_URL, ALIGO_API_KEY, ALIGO_USER_ID, ALIGO_SENDER_NUMBER } = process.env;
 
-class SendSms {
+class SmsManager {
   async send(phonenumber: string, message: string) {
-    if (
-      !ALIGO_API_URL ||
-      !ALIGO_API_KEY ||
-      !ALIGO_USER_ID ||
-      !ALIGO_SENDER_NUMBER
-    ) {
+    if (!ALIGO_API_URL || !ALIGO_API_KEY || !ALIGO_USER_ID || !ALIGO_SENDER_NUMBER) {
       return;
     }
 
@@ -21,11 +15,11 @@ class SendSms {
         sender: ALIGO_SENDER_NUMBER,
         receiver: phonenumber,
         msg: message,
-        msg_type: "SMS",
+        msg_type: 'SMS',
       },
     });
 
-    if (data.result_code !== 1) {
+    if (data.result_code != 1) {
       return false;
     }
 
@@ -33,4 +27,4 @@ class SendSms {
   }
 }
 
-export default SendSms;
+export default SmsManager;

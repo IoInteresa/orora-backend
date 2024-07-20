@@ -1,12 +1,13 @@
-import { Router } from "express";
+import { Router } from 'express';
 
-import IUserController from "../Interfaces/User/IUserController";
+import IUserController from '../Interfaces/User/IUserController';
 
 export default (userController: IUserController) => {
   const router = Router();
 
-  router.post("/registration", userController.registration);
-  router.post("/send-verify-code", userController.sendVerifyCode);
+  router.post('/registration', userController.registration);
+  router.post('/send-verify-code', userController.sendVerifyCode);
+  router.post('/verify', userController.verify);
 
   return router;
 };

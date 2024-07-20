@@ -1,14 +1,14 @@
-import nodemailer from "nodemailer";
-import SMTPTransport from "nodemailer/lib/smtp-transport";
+import nodemailer from 'nodemailer';
+import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
 const { SMTP_USER, SMTP_PASSWORD } = process.env;
 
-class MailSender {
+class MailManager {
   public transporter: nodemailer.Transporter;
 
   constructor() {
     const transportOptions: SMTPTransport.Options = {
-      service: "gmail",
+      service: 'gmail',
       secure: false,
       auth: {
         user: SMTP_USER,
@@ -23,7 +23,7 @@ class MailSender {
     const response = await this.transporter.sendMail({
       from: `"Your App" <${process.env.GMAIL_USER}>`,
       to: email,
-      subject: "Confirm Your Email Address",
+      subject: 'Confirm Your Email Address',
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4;">
           <h2>Welcome to Your App!</h2>
@@ -43,4 +43,4 @@ class MailSender {
   }
 }
 
-export default MailSender;
+export default MailManager;

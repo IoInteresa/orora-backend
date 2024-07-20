@@ -1,4 +1,4 @@
-import { HttpStatus } from "../Constants";
+import { HttpStatus } from '../Constants';
 
 class ThrowError extends Error {
   public statusCode: number;

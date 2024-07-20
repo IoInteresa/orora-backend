@@ -1,10 +1,10 @@
-import { Router } from "express";
+import { Router } from 'express';
 
-import UserRoutes from "./UserRoutes";
-import { userController } from "../container";
+import UserRoutes from './UserRoutes';
+import { userController } from '../container';
 
 const router = Router();
 
-router.use("/user", UserRoutes(userController));
+router.use('/user', UserRoutes(userController));
 
 export default router;

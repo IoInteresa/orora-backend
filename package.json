@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "main": "./src/index.ts",
   "scripts": {
-    "build": "npx tsc",
-    "dev": "nodemon --exec ts-node src/index.ts"
+    "start": "npx tsc",
+    "dev": "nodemon --exec ts-node src/index.ts",
+    "lint": "eslint 'src/**/*.{js,ts,tsx}'",
+    "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,json,css,scss,md}'",
+    "lint:fix": "eslint --fix 'src/**/*.{js,ts,tsx}'"
   },
   "keywords": [],
   "author": "",
@@ -31,7 +34,14 @@
     "@types/knex": "^0.16.1",
     "@types/node": "^20.14.11",
     "@types/nodemailer": "^6.4.15",
+    "@typescript-eslint/eslint-plugin": "^7.16.1",
+    "@typescript-eslint/parser": "^7.16.1",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-prettier": "^5.2.1",
     "nodemon": "^3.1.4",
+    "prettier": "^3.3.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.3"
   }

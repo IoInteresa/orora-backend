@@ -9,3 +9,9 @@ export interface SendVerifyCodeData {
   email?: string;
   phonenumber?: string;
 }
+
+export interface VerifyData {
+  email?: string;
+  phonenumber?: string;
+  code: number;
+}

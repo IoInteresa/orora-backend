@@ -23,13 +23,19 @@ export enum HttpStatus {
 }
 
 export enum ResponseText {
-  INVALID_DATA = "Required fields are missing or invalid",
-  USER_ALREADY_EXISTS = "User already exists",
-  INTERNAL_SERVER_ERROR = "Internal server error",
-  UNABLE_USER_CREATE = "Unable to create user at the moment",
-  USER_NOT_FOUND = "User not found",
-  USER_NOT_VERIFIED = "User is not verified",
-  UNABLE_TO_SEND_EMAIL = "Unable to send email",
-  UNABLE_TO_SEND_SMS = "Unable to send SMS",
-  UNABLE_TO_SAVE_VERIFICATION_CODE = "Unable to save verification code",
+  INVALID_DATA = 'Required fields are missing or invalid',
+  USER_ALREADY_EXISTS = 'User already exists',
+  INTERNAL_SERVER_ERROR = 'Internal server error',
+  UNABLE_USER_CREATE = 'Unable to create user at the moment',
+  USER_NOT_FOUND = 'User not found',
+  USER_NOT_VERIFIED = 'User is not verified',
+  UNABLE_TO_SEND_EMAIL = 'Unable to send email',
+  UNABLE_TO_SEND_SMS = 'Unable to send SMS',
+  UNABLE_TO_SAVE_VERIFICATION_CODE = 'Unable to save verification code',
+  VERIFICATION_CODE_NOT_FOUND = 'Verification code not found',
+  INVALID_VERIFICATION_CODE = 'Invalid verification code',
+  USER_ALREADY_VERIFIED = 'User is already verified',
+  USER_NOT_VERIFIED_YET = 'User is not verified yet',
+  UNABLE_TO_UPDATE_USER_VERIFICATION = 'Unable to update user verification',
+  UNABLE_TO_GENERATE_TOKEN = 'Unable to generate token jwt',
 }
