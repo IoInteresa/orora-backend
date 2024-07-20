@@ -43,7 +43,7 @@ class UserController implements IUserController {
             if (errors) {
                 throw new ThrowError(HttpStatus.UNPROCESSABLE_ENTITY, ResponseText.INVALID_DATA);
             }
-
+            
             const response = await this.userService.sendVerifyCode(req.body);
             res.json(response);
         } catch (error) {
@@ -81,6 +81,15 @@ class UserController implements IUserController {
             next(error);
         }
     };
+
+    public get = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const user = await this.userService.get(res.locals.user.id);
+            res.json({ status: HttpStatus.OK, data: user });
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 export default UserController;

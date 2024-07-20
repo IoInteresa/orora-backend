@@ -179,6 +179,10 @@ class UserService implements IUserService {
             throw new ThrowError(HttpStatus.NOT_FOUND, ResponseText.USER_NOT_FOUND);
         }
 
+        if (!user.verified) {
+            throw new ThrowError(HttpStatus.FORBIDDEN, ResponseText.USER_NOT_VERIFIED_YET);
+        }
+
         const isPassEqual = await bcrypt.compare(password, user.password);
         if (!isPassEqual) {
             throw new ThrowError(HttpStatus.BAD_REQUEST, ResponseText.INVALID_LOGIN_CREDENTIALS);
@@ -195,6 +199,15 @@ class UserService implements IUserService {
         const userDto = new UserDTO(user);
         return { user: userDto, accessToken };
     };
+
+    public get = async (id: string) => {
+        const user = await this.userModel.findOne({ id });
+        if (!user) {
+            throw new ThrowError(HttpStatus.NOT_FOUND, ResponseText.USER_NOT_FOUND);
+        }
+
+        return new UserDTO(user);
+    }
 }
 
 export default UserService;

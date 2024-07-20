@@ -18,6 +18,7 @@
     "sourceType": "module"
   },
   "rules": {
+    "prettier/prettier": "off",
     "indent": "off",
     "import/order": [
       "error",

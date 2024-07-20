@@ -7,4 +7,5 @@ export default interface IUserService {
     sendVerifyCode: (data: SendVerifyCodeData) => Promise<{ status: number }>;
     verify: (data: VerifyData) => Promise<IUserServiceLoginResponse>;
     login: (data: LoginData) => Promise<IUserServiceLoginResponse>;
+    get: (id: string) => Promise<UserDTO>;
 }

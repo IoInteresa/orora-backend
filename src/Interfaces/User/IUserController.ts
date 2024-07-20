@@ -5,4 +5,5 @@ export default interface IUserController {
     sendVerifyCode: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     verify: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     login: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+    get: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 }
