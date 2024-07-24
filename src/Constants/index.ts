@@ -41,4 +41,5 @@ export enum ResponseText {
     UNABLE_TO_LOGOUT = 'Unable to logout',
     UNAUTHORIZED = 'Unauthorized',
     TOKEN_EXPIRED = 'Token expired or is invalid',
+    UNABLE_TO_CHANGE_PASSWORD = 'Unable to change password',
 }

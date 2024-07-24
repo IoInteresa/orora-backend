@@ -257,4 +257,60 @@ GET /user
     "status": 404,
     "data": "User not found"
 }
+{
+    "status": 500
+    "data": "Internal server error"
+}
+```
+
+
+&nbsp;
+&nbsp;
+
+### Change Password
+```GET /change-password```
++ Bearer Auth Token
+
+#### Body
+```
+{
+    "oldPassword": string (lenght 6-20)
+    "newPassword": string (lenght 6-20)
+}
+```
+
+#### Response
+```
+{
+    "status": 200
+}
+```
+
+### Other responses
+```
+{
+    "status": 400,
+    "data": "Invalid login credentials"
+}
+{
+    "status": 403,
+    "data": "User is not verified yet"
+}
+{
+    "status": 404,
+    "data": "User not found"
+}
+{
+    "status": 422,
+    "data": "Required fields are missing or invalid"
+}
+{
+    "status": 500,
+    "data": "Unable to change password"
+}
+{
+    "status": 500
+    "data": "Internal server error"
+}
+
 ```

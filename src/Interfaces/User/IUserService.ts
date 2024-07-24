@@ -1,6 +1,6 @@
 import { IUserServiceLoginResponse } from '.';
 import UserDTO from '../../Dto/UserDto';
-import { LoginData, RegistrationData, SendVerifyCodeData, VerifyData } from '../../Validators/Data';
+import { ChangePasswordData, LoginData, RegistrationData, SendVerifyCodeData, VerifyData } from '../../Validators/Data';
 
 export default interface IUserService {
     registration: (data: RegistrationData) => Promise<UserDTO>;
@@ -8,4 +8,5 @@ export default interface IUserService {
     verify: (data: VerifyData) => Promise<IUserServiceLoginResponse>;
     login: (data: LoginData) => Promise<IUserServiceLoginResponse>;
     get: (id: string) => Promise<UserDTO>;
+    changePassword: (id: string, data: ChangePasswordData) => Promise<{ status: number }>;
 }

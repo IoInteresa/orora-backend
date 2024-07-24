@@ -11,6 +11,7 @@ export default (userController: IUserController) => {
     router.post('/verify', userController.verify);
     router.post('/login', userController.login);
     router.get('/', AuthMiddleware, userController.get)
+    router.post('/change-password', AuthMiddleware, userController.changePassword);
 
     return router;
 };

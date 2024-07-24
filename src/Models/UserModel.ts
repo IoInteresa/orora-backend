@@ -33,6 +33,15 @@ class UserModel implements IUserModel {
 
         return updatedUser;
     };
+
+    public updatePassword = async (user: IUser): Promise<IUser> => {
+        const [updatedUser] = await db(this.tableName)
+            .where({ id: user.id })
+            .update({ password: user.password })
+            .returning<IUser[]>('*');
+
+        return updatedUser;
+    }
 }
 
 export default UserModel;

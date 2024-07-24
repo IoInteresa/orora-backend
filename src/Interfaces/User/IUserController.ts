@@ -6,4 +6,5 @@ export default interface IUserController {
     verify: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     login: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     get: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+    changePassword: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 }

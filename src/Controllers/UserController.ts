@@ -4,8 +4,8 @@ import { HttpStatus, ResponseText } from '../Constants';
 import IUserController from '../Interfaces/User/IUserController';
 import IUserService from '../Interfaces/User/IUserService';
 import ThrowError from '../Responses/ThrowError';
-import { LoginData, RegistrationData, SendVerifyCodeData, VerifyData } from '../Validators/Data';
-import { LoginDto, RegistrationDto, SendVerifyCodeDto, VerifyDto } from '../Validators/Dto';
+import { ChangePasswordData, LoginData, RegistrationData, SendVerifyCodeData, VerifyData } from '../Validators/Data';
+import { ChangePasswordDto, LoginDto, RegistrationDto, SendVerifyCodeDto, VerifyDto } from '../Validators/Dto';
 import Validator from '../Validators/Validator';
 
 class UserController implements IUserController {
@@ -86,6 +86,20 @@ class UserController implements IUserController {
         try {
             const user = await this.userService.get(res.locals.user.id);
             res.json({ status: HttpStatus.OK, data: user });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    public changePassword = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const errors = await this.validator.validate<ChangePasswordData, ChangePasswordDto>(req.body, ChangePasswordDto);
+            if (errors) {
+                throw new ThrowError(HttpStatus.UNPROCESSABLE_ENTITY, ResponseText.INVALID_DATA);
+            }
+
+            const response = await this.userService.changePassword(res.locals.user.id, req.body);
+            res.json(response);
         } catch (error) {
             next(error);
         }
