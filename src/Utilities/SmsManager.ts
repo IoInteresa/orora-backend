@@ -19,6 +19,8 @@ class SmsManager {
             },
         });
 
+        console.log(data);
+        
         if (data.result_code != 1) {
             return false;
         }

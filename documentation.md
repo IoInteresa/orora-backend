@@ -268,7 +268,7 @@ GET /user
 &nbsp;
 
 ### Change Password
-```GET /change-password```
+```POST /user/change-password```
 + Bearer Auth Token
 
 #### Body
@@ -313,4 +313,170 @@ GET /user
     "data": "Internal server error"
 }
 
+```
+
+
+&nbsp;
+&nbsp;
+
+### Create Download History
+```POST /download/create```
++ Bearer Auth Token
+
+#### Body
+```
+{
+    "title": string (minLength 3)
+    "format": string
+    "size": number
+    "url": string (minLength 5)
+}
+```
+
+#### Response
+```
+{
+    "status": 201,
+    "data": {
+        "id": string,
+        "title": string,
+        "format": string,
+        "size": string,
+        "url": string,
+        "thumbnailUrl": string,
+        "createdAt": Date
+    }
+}
+```
+
+### Other responses
+```
+{
+    "status": 403,
+    "data": "User is not verified yet"
+}
+{
+    "status": 404,
+    "data": "User not found"
+}
+{
+    "status": 422,
+    "data": "Required fields are missing or invalid"
+}
+{
+    "status": 500,
+    "data": "Unable to create download"
+}
+{
+    "status": 500
+    "data": "Internal server error"
+}
+```
+
+&nbsp;
+&nbsp;
+
+### Get Downloads History
+```POST /download```
++ Bearer Auth Token
+
+#### Body
+```
+{
+    "page": number
+    "limit": number
+}
+```
+
+#### Response
+```
+{
+    "status": 200,
+    "data": {
+        "data": [
+            {
+                "id": string,
+                "title": string,
+                "format": string,
+                "size": string,
+                "url": string,
+                "thumbnailUrl": string,
+                "createdAt": Date
+            }
+            ...
+        ],
+        "total": number,
+        "page": number,
+        "limit": number
+    }
+}
+```
+
+### Other responses
+```
+{
+    "status": 403,
+    "data": "User is not verified yet"
+}
+{
+    "status": 404,
+    "data": "User not found"
+}
+{
+    "status": 422,
+    "data": "Required fields are missing or invalid"
+}
+{
+    "status": 500
+    "data": "Internal server error"
+}
+```
+
+&nbsp;
+&nbsp;
+
+### Delete Download History
+```POST /download```
++ Bearer Auth Token
+
+#### Body
+```
+{
+    "id": string
+}
+```
+
+#### Response
+```
+{
+    "status": 200
+}
+```
+
+### Other responses
+```
+{
+    "status": 403,
+    "data": "User is not verified yet"
+}
+{
+    "status": 404,
+    "data": "User not found"
+}
+{
+    "status": 404,
+    "data": "Download not found"
+}
+{
+    "status": 422,
+    "data": "Required fields are missing or invalid"
+}
+{
+    "status": 500
+    "data": "Unable to delete download"
+}
+{
+    "status": 500
+    "data": "Internal server error"
+}
 ```

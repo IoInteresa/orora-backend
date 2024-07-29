@@ -42,4 +42,8 @@ export enum ResponseText {
     UNAUTHORIZED = 'Unauthorized',
     TOKEN_EXPIRED = 'Token expired or is invalid',
     UNABLE_TO_CHANGE_PASSWORD = 'Unable to change password',
+    UNABLE_TO_CREATE_DOWNLOAD = 'Unable to create download',
+    DOWNLOAD_NOT_FOUND = 'Download not found',
+    UNABLE_TO_DELETE_DOWNLOAD = 'Unable to delete download',
+    UNABLE_TO_CLEAR_DOWNLOADS = 'Unable to clear downloads',
 }

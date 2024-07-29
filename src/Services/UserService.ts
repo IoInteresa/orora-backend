@@ -10,7 +10,13 @@ import { generateVerifyCode } from '../Utilities';
 import JwtManager from '../Utilities/JwtManager';
 import MailManager from '../Utilities/MailManager';
 import SmsManager from '../Utilities/SmsManager';
-import { ChangePasswordData, LoginData, RegistrationData, SendVerifyCodeData, VerifyData } from '../Validators/Data';
+import {
+    ChangePasswordData,
+    LoginData,
+    RegistrationData,
+    SendVerifyCodeData,
+    VerifyData,
+} from '../Validators/Data';
 
 class UserService implements IUserService {
     private readonly userModel: IUserModel;
@@ -207,7 +213,7 @@ class UserService implements IUserService {
         }
 
         return new UserDTO(user);
-    }
+    };
 
     public changePassword = async (id: string, changePasswordData: ChangePasswordData) => {
         const { newPassword, oldPassword } = changePasswordData;
@@ -228,7 +234,10 @@ class UserService implements IUserService {
 
         const hashPassword = await bcrypt.hash(newPassword, 5);
         if (!hashPassword) {
-            throw new ThrowError(HttpStatus.INTERNAL_SERVER_ERROR, ResponseText.UNABLE_TO_CHANGE_PASSWORD);
+            throw new ThrowError(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                ResponseText.UNABLE_TO_CHANGE_PASSWORD,
+            );
         }
 
         const updatedUser = await this.userModel.updatePassword({
@@ -243,7 +252,7 @@ class UserService implements IUserService {
         }
 
         return { status: HttpStatus.OK };
-    }
+    };
 }
 
 export default UserService;

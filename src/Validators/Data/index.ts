@@ -26,3 +26,23 @@ export interface ChangePasswordData {
     oldPassword: string;
     newPassword: string;
 }
+
+export interface CreateDownloadData {
+    title: string;
+    format: string;
+    size: number;
+    url: string;
+}
+
+export interface GetDownloadsData {
+    page: number;
+    limit: number;
+}
+
+export interface DeleteDownloadData {
+    id: string;
+}
+
+export interface SearchDownloadData {
+    term: string
+}

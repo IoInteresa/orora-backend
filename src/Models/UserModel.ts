@@ -41,7 +41,7 @@ class UserModel implements IUserModel {
             .returning<IUser[]>('*');
 
         return updatedUser;
-    }
+    };
 }
 
 export default UserModel;
